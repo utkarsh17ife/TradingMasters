@@ -119,25 +119,33 @@ app.controller('stockCtrl', function ($scope, $http) {
                     return resolve(response.data.dataset.data[0][5]);
                 })
                 .catch(err => {
-                    console.log("Failed to fetch for: "+ name);
+                    console.log("Failed to fetch for: " + name);
                 })
         })
 
-    }
-
+    }    
     var dataFetcher = () => {
         console.log("dataFetcher triggered!");
-        $scope.stocks.forEach(function (element) {
+        $scope.stocks.forEach(function (element) {     
+            sleep()
             apifetcher(element.name)
                 .then(response => {
-                    console.log("response is here for: "+element.name +": "+ JSON.stringify(response))
+                    console.log("response is here for: " + element.name + ": " + JSON.stringify(response))
                     $scope.stocks.find(stock => stock.name === element.name).cprice = response;
                 })
         });
     }
-    dataFetcher();
-    setInterval(dataFetcher, 4000);
+    setTimeout(()=>{
+        setInterval(dataFetcher, ($scope.stocks.length * 2)*1000 + 4000);
+    }, 2000);
+    
 
+
+    function sleep() {
+        var date = new Date();
+        do { curDate = new Date(); }
+        while (curDate - date < 1000);
+    }
 
 
 
